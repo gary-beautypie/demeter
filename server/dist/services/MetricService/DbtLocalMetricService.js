@@ -51,17 +51,16 @@ export default class DbtLocalMetricService {
             const res = '[' +
                 ((_a = execFileSync('dbt', [
                     'ls',
+                    ...(this.target ? ['--target', this.target] : []),
+                    ...(this.profile ? ['--profile', this.profile] : []),
+                    ...(this.dbtProfilePath ? ['--profiles-dir', this.dbtProfilePath] : []),
+                    ...(select ? ['--select', 'metric:aov_gbp_exc_discounts'] : []),
                     '--resource-type',
                     'metric',
                     '--output',
                     'json',
                     '--output-keys',
                     '"name model label description type time_grains dimensions filters unique_id package_name"',
-                    ...(select ? [select] : []),
-                    ...(this.profile ? ['--profile', this.profile] : []),
-                    ...(this.dbtProfilePath
-                        ? ['--profiles-dir', this.dbtProfilePath]
-                        : []),
                 ], {
                     cwd: this.dbtProjectPath,
                     encoding: 'utf-8',
@@ -71,6 +70,7 @@ export default class DbtLocalMetricService {
                     .match(/\{.*\}/g)) === null || _a === void 0 ? void 0 : _a.toString())
                 +
                     ']';
+            console.log(res);
             let metrics = JSON.parse(res);
             if (type) {
                 metrics = metrics.filter(metric => metric.type === type);

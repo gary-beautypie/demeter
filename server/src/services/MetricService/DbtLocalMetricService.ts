@@ -152,17 +152,16 @@ export default class DbtLocalMetricService implements DbtMetricService {
         'dbt',
         [
           'ls',
+          ...(this.target ? ['--target', this.target] : []),
+          ...(this.profile ? ['--profile', this.profile] : []),
+          ...(this.dbtProfilePath ? ['--profiles-dir', this.dbtProfilePath] : []),
+          ...(select ? [select] : []),
           '--resource-type',
           'metric',
           '--output',
           'json',
           '--output-keys',
           '"name model label description type time_grains dimensions filters unique_id package_name"',
-          ...(select ? [select] : []),
-          ...(this.profile ? ['--profile', this.profile] : []),
-          ...(this.dbtProfilePath
-            ? ['--profiles-dir', this.dbtProfilePath]
-            : []),
         ],
         {
           cwd: this.dbtProjectPath,
