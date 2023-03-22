@@ -47,14 +47,14 @@ export default class DbtLocalMetricService {
             var _a;
             console.debug(`called listMetrics with params ${JSON.stringify({ name, selectors })}`);
             const { type, model, package_name } = selectors;
-            const select = name ? `--select "metric:${name.replace(/"/g, '')}"` : '';
+            const select = name ? `metric:${name.replace(/"/g, '')}` : '';
             const res = '[' +
                 ((_a = execFileSync('dbt', [
                     'ls',
                     ...(this.target ? ['--target', this.target] : []),
                     ...(this.profile ? ['--profile', this.profile] : []),
                     ...(this.dbtProfilePath ? ['--profiles-dir', this.dbtProfilePath] : []),
-                    ...(select ? ['--select', 'metric:aov_gbp_exc_discounts'] : []),
+                    ...(select ? ['--select', select] : []),
                     '--resource-type',
                     'metric',
                     '--output',
@@ -70,7 +70,6 @@ export default class DbtLocalMetricService {
                     .match(/\{.*\}/g)) === null || _a === void 0 ? void 0 : _a.toString())
                 +
                     ']';
-            console.log(res);
             let metrics = JSON.parse(res);
             if (type) {
                 metrics = metrics.filter(metric => metric.type === type);

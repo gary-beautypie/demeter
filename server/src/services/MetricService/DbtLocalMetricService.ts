@@ -145,7 +145,7 @@ export default class DbtLocalMetricService implements DbtMetricService {
     );
     const {type, model, package_name} = selectors;
 
-    const select = name ? `--select "metric:${name.replace(/"/g, '')}"` : '';
+    const select = name ? `metric:${name.replace(/"/g, '')}` : '';
     const res =
       '[' +
       execFileSync(
@@ -155,7 +155,7 @@ export default class DbtLocalMetricService implements DbtMetricService {
           ...(this.target ? ['--target', this.target] : []),
           ...(this.profile ? ['--profile', this.profile] : []),
           ...(this.dbtProfilePath ? ['--profiles-dir', this.dbtProfilePath] : []),
-          ...(select ? [select] : []),
+          ...(select ? ['--select', select] : []),
           '--resource-type',
           'metric',
           '--output',
